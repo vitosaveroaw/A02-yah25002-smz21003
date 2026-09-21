@@ -1,12 +1,12 @@
 
 --- Training Set Metrics ---
-Mean Absolute Error (MAE): 0.5703
-Mean Squared Error (MSE): 0.6117
-Root Mean Squared Error (RMSE): 0.7821
-R-squared (R2 Score): 0.5424
+Mean Absolute Error (MAE): 0.5377
+Mean Squared Error (MSE): 0.5399
+Root Mean Squared Error (RMSE): 0.7348
+R-squared (R2 Score): 0.5961
 
 --- Test Set Metrics ---
-Mean Absolute Error (MAE): 0.5753
-Mean Squared Error (MSE): 0.6250
-Root Mean Squared Error (RMSE): 0.7906
-R-squared (R2 Score): 0.5231
+Mean Absolute Error (MAE): 0.5454
+Mean Squared Error (MSE): 0.5518
+Root Mean Squared Error (RMSE): 0.7428
+R-squared (R2 Score): 0.5789

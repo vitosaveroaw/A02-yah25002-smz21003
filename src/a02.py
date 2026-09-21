@@ -36,9 +36,9 @@ mlp_regressor = MLPRegressor(
     hidden_layer_sizes=(10, 5), # Custom hyperparameter: two hidden layers with 10 and 5 neurons
     activation='relu',
     solver='adam',
-    early_stopping=True,          # Enable early stopping
-    max_iter=1000,                # Maximum number of iterations for the solver to converge
-    batch_size=100,                # Custom hyperparameter: Use mini-batches of size 100
+    early_stopping=True,        # Enable early stopping
+    max_iter=1000,              # Maximum number of iterations for the solver to converge
+    batch_size=500,             # Custom hyperparameter: Use mini-batches of size 500
     random_state=42
 )
 
@@ -160,3 +160,16 @@ plt.tight_layout()
 plt.savefig("figures/test_residuals.png")
 plt.close()
 print("Saved figures/test_residuals.png")
+
+# Loss Curve
+# Training loss curve for the MLPRegressor
+plt.figure(figsize=(10, 6))
+plt.plot(mlp_regressor.loss_curve_)
+plt.xlabel("Iterations")
+plt.ylabel("Training Loss")
+plt.title("Training Loss Curve for MLPRegressor")
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig("figures/loss_curve.png")
+plt.close()
+print("Saved figures/loss_curve.png")
