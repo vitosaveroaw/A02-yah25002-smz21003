@@ -52,43 +52,30 @@ y_train_pred = mlp_regressor.predict(X_train)
 # Make sure the figures folder exists
 os.makedirs('figures', exist_ok=True)
 
-#Plot actual vs.predicted valuesfor the training set
-plt.figure(figsize=(6, 6))
-plt.scatter(y_train, y_train_pred, alpha=0.3, s=10)
-plt.plot(
-    [y_train.min(), y_train.max()], 
-    [y_train.min(), y_train.max()], "r--",
-    linewidth=2,
-) 
+# Plot actual vs. predicted values for the training set
+plt.figure(figsize=(10 , 6))
+sns.scatterplot(x=y_train, y=y_train_pred, alpha=0.6)
+plt.plot([y_train.min(), y_train.max()], [y_train.min(), y_train.max()], "r--") 
 plt.xlabel ("Actual median house value")
 plt.ylabel("Predicted median house value")
 plt.title("Actual vs. Predicted Train Set")
-plt.grid(True)
 plt.tight_layout()
-plt.savefig("figures/train_actual_vs_pred.png", dpi=150)
+plt.savefig("figures/train_actual_vs_pred.png")
 plt.close()
-
 print("Saved figures/train_actual_vs_pred.png")
 
 # Create predictions on the test set
 y_test_pred = mlp_regressor.predict(X_test)
 
-plt.figure(figsize=(6, 6))
-plt.scatter(y_test, y_test_pred, alpha=0.3, s=10)
-plt.plot(
-    [y_test.min(), y_test.max()],
-    [y_test.min(), y_test.max()],
-    "r--",
-    linewidth=2,
-)
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=y_test, y=y_test_pred, alpha=0.6)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], "r--")
 plt.xlabel("Actual median house value")
 plt.ylabel("Predicted median house value")
 plt.title("Actual vs. Predicted Test Set")
-plt.grid(True)
 plt.tight_layout()
-plt.savefig("figures/test_actual_vs_pred.png", dpi=150)
+plt.savefig("figures/test_actual_vs_pred.png")
 plt.close()
-
 print("Saved figures/test_actual_vs_pred.png")
 
 # Metrics Evaluation
@@ -146,17 +133,30 @@ with open(metrics_file_path, 'w') as f:
 print(f"Regression metrics saved successfully to '{metrics_file_path}'")
 
 # Residuals
+# Residual plot for the training set
+residuals_train = y_train - y_train_pred
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=y_train_pred, y=residuals_train, alpha=0.6)
+plt.grid(True)
+plt.axhline(y=0, color="r", linestyle="--", linewidth=2)
+plt.xlabel("Predicted median house value")
+plt.ylabel("Residuals(Actual - Predicted)")
+plt.title("Residuals plot for Training Set")
+plt.tight_layout()
+plt.savefig("figures/train_residuals.png")
+plt.close()
+print("Saved figures/train_residuals.png")
+
 # Residual plot for the test set
 residuals = y_test - y_test_pred
-plt.figure(figsize=(6, 6))
-plt.scatter(y_test_pred, residuals, alpha=0.3, s=10, color="green")
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=y_test_pred, y=residuals, alpha=0.6)
 plt.grid(True)
 plt.axhline(y=0, color="r", linestyle="--", linewidth=2)
 plt.xlabel("Predicted median house value")
 plt.ylabel("Residuals(Actual - Predicted)")
 plt.title("Residuals plot for Test Set")
-plt.grid(True)
 plt.tight_layout()
-plt.savefig("figures/test_residuals.png", dpi=150)
+plt.savefig("figures/test_residuals.png")
 plt.close()
 print("Saved figures/test_residuals.png")
