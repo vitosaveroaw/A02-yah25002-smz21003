@@ -87,6 +87,18 @@ plt.close()
 
 print("Saved figures/test_actual_vs_pred.png")
 
+#Residual plot for the test set
+residuals = y_test - test_pred
+plt.figure(figsize=(6, 6))
+plt.scatter(test_pred, residuals, alpha=0.3, s=10, color="green")
+plt.axhline(y=0, color="r", linestyle="--", linewidth=2)
+plt.xlabel("Predicted median house value")
+plt.ylabel("Residuals(Actual - Predicted)")
+plt.title("Residuals \u2014 Test")
+plt.tight_layout()
+plt.savefig("figures/test_residuals.png", dpi=150)
+plt.close()
+print("Saved figures/test_residuals.png")
 
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
