@@ -32,7 +32,7 @@ Running the script creates two folders called 'metrics' and 'figures' and prints
 - Confirmation messages after training and after each file is saved.
 - Regression metrics (MAE, MSE, RMSE, R²) for training and test sets both for raw features and scaled features.
 
-### [figures](figures) folder
+### [`figures`](figures) folder
 | File | Description |
 | :--- | :--- |
 | [medhouseval_distribution.png](figures/medhouseval_distribution.png) | Distribution of the target variable (`MedHouseVal`) |
@@ -45,7 +45,7 @@ Running the script creates two folders called 'metrics' and 'figures' and prints
 | [scaled_test_residuals.png](figures/scaled_test_residuals.png) | Test residual plot (scaled features) |
 | [scaled_loss_curve.png](figures/scaled_loss_curve.png) | Training loss vs. iterations (scaled features) |
 
-### [metrics](metrics) folder
+### [`metrics`](metrics) folder
 | File | Description |
 | :--- | :--- |
 | [metrics_performance.txt](metrics/metrics_performance.txt) | A text file that have both raw and scaled metric performance on training and test set |
