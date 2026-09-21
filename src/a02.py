@@ -47,18 +47,18 @@ import os
 import matplotlib.pyplot as plt
  
 # Create predictions on the training set
-train_pred = mlp_regressor.predict(X_train)
+y_train_pred = mlp_regressor.predict(X_train)
 
 # Make sure the figures folder exists
 os.makedirs('figures', exist_ok=True)
 
 #Plot actual vs.predicted valuesfor the training set
 plt.figure(figsize=(6, 6))
-plt.scatter(y_train, train_pred, alpha=0.3, s=10)
+plt.scatter(y_train, y_train_pred, alpha=0.3, s=10)
 plt.plot(
-[y_train.min(), y_train.max()], 
-[y_train.min(), y_train.max()], "r--",
-linewidth=2,
+    [y_train.min(), y_train.max()], 
+    [y_train.min(), y_train.max()], "r--",
+    linewidth=2,
 ) 
 plt.xlabel ("Actual median house value")
 plt.ylabel("Predicted median house value")
@@ -68,10 +68,10 @@ plt.savefig("figures/train_actual_vs_pred.png", dpi=150)
 plt.close()
 
 print("Saved figures/train_actual_vs_pred.png")
-test_pred = mlp_regressor.predict(X_test)
+y_test_pred = mlp_regressor.predict(X_test)
 
 plt.figure(figsize=(6, 6))
-plt.scatter(y_test, test_pred, alpha=0.3, s=10, color="darkorange")
+plt.scatter(y_test, y_test_pred, alpha=0.3, s=10)
 plt.plot(
     [y_test.min(), y_test.max()],
     [y_test.min(), y_test.max()],
@@ -86,3 +86,31 @@ plt.savefig("figures/test_actual_vs_pred.png", dpi=150)
 plt.close()
 
 print("Saved figures/test_actual_vs_pred.png")
+
+
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import numpy as np
+
+# --- Evaluate Training Set Performance ---
+print("\n--- Training Set Metrics ---")
+mae_train = mean_absolute_error(y_train, y_train_pred)
+mse_train = mean_squared_error(y_train, y_train_pred)
+rmse_train = np.sqrt(mse_train)
+r2_train = r2_score(y_train, y_train_pred)
+
+print(f"Mean Absolute Error (MAE): {mae_train:.4f}")
+print(f"Mean Squared Error (MSE): {mse_train:.4f}")
+print(f"Root Mean Squared Error (RMSE): {rmse_train:.4f}")
+print(f"R-squared (R2 Score): {r2_train:.4f}")
+
+# --- Evaluate Test Set Performance ---
+print("\n--- Test Set Metrics ---")
+mae_test = mean_absolute_error(y_test, y_test_pred)
+mse_test = mean_squared_error(y_test, y_test_pred)
+rmse_test = np.sqrt(mse_test)
+r2_test = r2_score(y_test, y_test_pred)
+
+print(f"Mean Absolute Error (MAE): {mae_test:.4f}")
+print(f"Mean Squared Error (MSE): {mse_test:.4f}")
+print(f"Root Mean Squared Error (RMSE): {rmse_test:.4f}")
+print(f"R-squared (R2 Score): {r2_test:.4f}")
