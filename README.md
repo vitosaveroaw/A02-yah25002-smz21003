@@ -1,5 +1,4 @@
 # A02 Assignment - MLPRegressor
-A02 Assignment <br>
 Ping pong assignment <br>
 Python version: 3.14.5
 
@@ -25,13 +24,13 @@ python src/a02.py
 ```
 
 ## Output
-Running the script creates two folders called 'metrics' and 'figures' and prints results to the console
+Running the script creates two folders called 'metrics' and 'figures' and prints results to the console.
 
 ### Console output
-- Preview of the dataset (`df.head()`) and its shape
-- Shapes of the train/test splits
-- Confirmation messages after training and after each file is saved
-- Regression metrics (MAE, MSE, RMSE, R²) for training and test sets both for raw features and scaled features
+- Preview of the dataset (`df.head()`) and its shape.
+- Shapes of the train/test splits.
+- Confirmation messages after training and after each file is saved.
+- Regression metrics (MAE, MSE, RMSE, R²) for training and test sets both for raw features and scaled features.
 
 ### [figures](figures) folder
 | File | Description |
