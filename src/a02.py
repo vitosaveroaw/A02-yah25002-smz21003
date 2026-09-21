@@ -1,7 +1,13 @@
 from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import numpy as np
+import os
+import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 
 # Load California Housing dataset
 housing = fetch_california_housing(as_frame=True)
@@ -26,83 +32,64 @@ print(f"X_test shape: {X_test.shape}")
 print(f"y_train shape: {y_train.shape}")
 print(f"y_test shape: {y_test.shape}")
 
+# Make sure the figures folder exists
+os.makedirs('figures', exist_ok=True)
+
+plt.figure(figsize=(10, 6))
+sns.histplot(df['MedHouseVal'], kde=True, bins=50)
+plt.title('Distribution of MedHouseVal')
+plt.xlabel('Median House Value')
+plt.ylabel('Frequency')
+plt.tight_layout()
+plt.savefig('figures/medhouseval_distribution.png')
+plt.close()
+print(f"Distribution plot of MedHouseVal saved to 'figures' directory.")
+
 # Initialize MLPRegressor with early stopping and custom hyperparameters
 mlp_regressor = MLPRegressor(
     hidden_layer_sizes=(10, 5), # Custom hyperparameter: two hidden layers with 10 and 5 neurons
     activation='relu',
     solver='adam',
-    early_stopping=True,          # Enable early stopping
-    max_iter=1000,                # Maximum number of iterations for the solver to converge
-    batch_size=100,                # Custom hyperparameter: Use mini-batches of size 100
+    early_stopping=True,        # Enable early stopping
+    max_iter=1000,              # Maximum number of iterations for the solver to converge
+    batch_size=500,             # Custom hyperparameter: Use mini-batches of size 500
     random_state=42
 )
 
 # Train the model
 mlp_regressor.fit(X_train, y_train)
 print("MLPRegressor model trained successfully with early stopping.")
-
-
-
-import os
-import matplotlib.pyplot as plt
  
 # Create predictions on the training set
 y_train_pred = mlp_regressor.predict(X_train)
 
-# Make sure the figures folder exists
-os.makedirs('figures', exist_ok=True)
-
-#Plot actual vs.predicted valuesfor the training set
-plt.figure(figsize=(6, 6))
-plt.scatter(y_train, y_train_pred, alpha=0.3, s=10)
-plt.plot(
-    [y_train.min(), y_train.max()], 
-    [y_train.min(), y_train.max()], "r--",
-    linewidth=2,
-) 
+# Plot actual vs. predicted values for the training set
+plt.figure(figsize=(10 , 6))
+sns.scatterplot(x=y_train, y=y_train_pred, alpha=0.6)
+plt.plot([y_train.min(), y_train.max()], [y_train.min(), y_train.max()], "r--") 
 plt.xlabel ("Actual median house value")
 plt.ylabel("Predicted median house value")
-plt.title("Actual vs. Predicted \u2014 Train")
+plt.title("Actual vs. Predicted Train Set")
 plt.tight_layout()
-plt.savefig("figures/train_actual_vs_pred.png", dpi=150)
+plt.savefig("figures/train_actual_vs_pred.png")
 plt.close()
-
 print("Saved figures/train_actual_vs_pred.png")
+
+# Create predictions on the test set
 y_test_pred = mlp_regressor.predict(X_test)
 
-plt.figure(figsize=(6, 6))
-plt.scatter(y_test, y_test_pred, alpha=0.3, s=10)
-plt.plot(
-    [y_test.min(), y_test.max()],
-    [y_test.min(), y_test.max()],
-    "r--",
-    linewidth=2,
-)
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=y_test, y=y_test_pred, alpha=0.6)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], "r--")
 plt.xlabel("Actual median house value")
 plt.ylabel("Predicted median house value")
-plt.title("Actual vs. Predicted \u2014 Test")
+plt.title("Actual vs. Predicted Test Set")
 plt.tight_layout()
-plt.savefig("figures/test_actual_vs_pred.png", dpi=150)
+plt.savefig("figures/test_actual_vs_pred.png")
 plt.close()
-
 print("Saved figures/test_actual_vs_pred.png")
 
-#Residual plot for the test set
-residuals = y_test - test_pred
-plt.figure(figsize=(6, 6))
-plt.scatter(test_pred, residuals, alpha=0.3, s=10, color="green")
-plt.axhline(y=0, color="r", linestyle="--", linewidth=2)
-plt.xlabel("Predicted median house value")
-plt.ylabel("Residuals(Actual - Predicted)")
-plt.title("Residuals \u2014 Test")
-plt.tight_layout()
-plt.savefig("figures/test_residuals.png", dpi=150)
-plt.close()
-print("Saved figures/test_residuals.png")
-
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-import numpy as np
-
+# Metrics Evaluation
 # --- Evaluate Training Set Performance ---
 print("\n--- Training Set Metrics ---")
 mae_train = mean_absolute_error(y_train, y_train_pred)
@@ -126,3 +113,170 @@ print(f"Mean Absolute Error (MAE): {mae_test:.4f}")
 print(f"Mean Squared Error (MSE): {mse_test:.4f}")
 print(f"Root Mean Squared Error (RMSE): {rmse_test:.4f}")
 print(f"R-squared (R2 Score): {r2_test:.4f}")
+
+# Save metrics to a text file
+# Make sure the metrics folder exists
+os.makedirs('metrics', exist_ok=True)
+
+# Prepare the metrics string to be saved
+metrics_content = f"""
+--- Training Set Metrics ---
+Mean Absolute Error (MAE): {mae_train:.4f}
+Mean Squared Error (MSE): {mse_train:.4f}
+Root Mean Squared Error (RMSE): {rmse_train:.4f}
+R-squared (R2 Score): {r2_train:.4f}
+
+--- Test Set Metrics ---
+Mean Absolute Error (MAE): {mae_test:.4f}
+Mean Squared Error (MSE): {mse_test:.4f}
+Root Mean Squared Error (RMSE): {rmse_test:.4f}
+R-squared (R2 Score): {r2_test:.4f}
+"""
+
+# Define the file path
+metrics_file_path = 'metrics/metrics_performance.txt'
+
+# Write the metrics to the file
+with open(metrics_file_path, 'w') as f:
+    f.write(metrics_content)
+print(f"Regression metrics saved successfully to '{metrics_file_path}'")
+
+# Residual plot for the test set
+residuals = y_test - y_test_pred
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=y_test_pred, y=residuals, alpha=0.6)
+plt.axhline(y=0, color="r", linestyle="--", linewidth=2)
+plt.xlabel("Predicted median house value")
+plt.ylabel("Residuals(Actual - Predicted)")
+plt.title("Residuals plot for Test Set")
+plt.tight_layout()
+plt.savefig("figures/test_residuals.png")
+plt.close()
+print("Saved figures/test_residuals.png")
+
+# Training loss curve for the MLPRegressor
+plt.figure(figsize=(10, 6))
+plt.plot(mlp_regressor.loss_curve_)
+plt.xlabel("Iterations")
+plt.ylabel("Training Loss")
+plt.title("Training Loss Curve for MLPRegressor")
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig("figures/loss_curve.png")
+plt.close()
+print("Saved figures/loss_curve.png")
+
+# Initialize the StandardScaler
+scaler = StandardScaler()
+
+# Fit the scaler on the training data and transform both training and test data
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+print("Features (X_train and X_test) have been scaled using StandardScaler.")
+print(f"X_train_scaled shape: {X_train_scaled.shape}")
+print(f"X_test_scaled shape: {X_test_scaled.shape}")
+
+# Train the model using scaled features
+mlp_regressor.fit(X_train_scaled, y_train)
+print("MLPRegressor scaled model trained successfully with early stopping.")
+
+# Create predictions on the training set
+y_train_pred = mlp_regressor.predict(X_train_scaled)
+
+# Plot actual vs. predicted values for the training set
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=y_train, y=y_train_pred, alpha=0.6)
+plt.plot([y_train.min(), y_train.max()], [y_train.min(), y_train.max()], "r--") 
+plt.xlabel ("Actual median house value")
+plt.ylabel("Predicted median house value")
+plt.title("Actual vs. Predicted Train Set (Scaled Features)")
+plt.tight_layout()
+plt.savefig("figures/scaled_train_actual_vs_pred.png")
+plt.close()
+print("Saved figures/scaled_train_actual_vs_pred.png")
+
+# Create predictions on the test set
+y_test_pred = mlp_regressor.predict(X_test_scaled)
+
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=y_test, y=y_test_pred, alpha=0.6)
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], "r--")
+plt.xlabel("Actual median house value")
+plt.ylabel("Predicted median house value")
+plt.title("Actual vs. Predicted Test Set (Scaled Features)")
+plt.tight_layout()
+plt.savefig("figures/scaled_test_actual_vs_pred.png")
+plt.close()
+print("Saved figures/scaled_test_actual_vs_pred.png")
+
+# Metrics Evaluation for Scaled Features
+# --- Evaluate Training Set Performance ---
+print("\n--- Training Set Metrics (Scaled Features) ---")
+mae_train_scaled = mean_absolute_error(y_train, y_train_pred)
+mse_train_scaled = mean_squared_error(y_train, y_train_pred)
+rmse_train_scaled = np.sqrt(mse_train_scaled)
+r2_train_scaled = r2_score(y_train, y_train_pred)
+
+print(f"Mean Absolute Error (MAE): {mae_train_scaled:.4f}")
+print(f"Mean Squared Error (MSE): {mse_train_scaled:.4f}")
+print(f"Root Mean Squared Error (RMSE): {rmse_train_scaled:.4f}")
+print(f"R-squared (R2): {r2_train_scaled:.4f}")
+
+# --- Evaluate Test Set Performance ---
+print("\n--- Test Set Metrics (Scaled Features) ---")
+mae_test_scaled = mean_absolute_error(y_test, y_test_pred)
+mse_test_scaled = mean_squared_error(y_test, y_test_pred)
+rmse_test_scaled = np.sqrt(mse_test_scaled)
+r2_test_scaled = r2_score(y_test, y_test_pred)
+
+print(f"Mean Absolute Error (MAE): {mae_test_scaled:.4f}")
+print(f"Mean Squared Error (MSE): {mse_test_scaled:.4f}")
+print(f"Root Mean Squared Error (RMSE): {rmse_test_scaled:.4f}")
+print(f"R-squared (R2): {r2_test_scaled:.4f}")
+
+# Save metrics to a text file for scaled features
+# Prepare the metrics string to be saved
+metrics_content = f"""
+--- Training Set Metrics (Scaled Features) ---
+Mean Absolute Error (MAE): {mae_train_scaled:.4f}
+Mean Squared Error (MSE): {mse_train_scaled:.4f}
+Root Mean Squared Error (RMSE): {rmse_train_scaled:.4f}
+R-squared (R2): {r2_train_scaled:.4f}
+
+--- Test Set Metrics (Scaled Features) ---
+Mean Absolute Error (MAE): {mae_test_scaled:.4f}
+Mean Squared Error (MSE): {mse_test_scaled:.4f}
+Root Mean Squared Error (RMSE): {rmse_test_scaled:.4f}
+R-squared (R2): {r2_test_scaled:.4f}
+"""
+
+# Append the metrics to the same file
+with open(metrics_file_path, 'a') as f:
+    f.write(metrics_content)
+print(f"Regression metrics appended successfully to '{metrics_file_path}'")
+
+# Residual plot for the test set with scaled features
+residuals_scaled = y_test - y_test_pred
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=y_test_pred, y=residuals_scaled, alpha=0.6)
+plt.axhline(y=0, color="r", linestyle="--", linewidth=2)
+plt.xlabel("Predicted median house value")
+plt.ylabel("Residuals(Actual - Predicted)")
+plt.title("Residuals plot for Test Set (Scaled Features)")
+plt.tight_layout()
+plt.savefig("figures/scaled_test_residuals.png")
+plt.close()
+print("Saved figures/scaled_test_residuals.png")
+
+# Training loss curve for the MLPRegressor with scaled features
+plt.figure(figsize=(10, 6))
+plt.plot(mlp_regressor.loss_curve_)
+plt.xlabel("Iterations")
+plt.ylabel("Training Loss")
+plt.title("Training Loss Curve for MLPRegressor (Scaled Features)")
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig("figures/scaled_loss_curve.png")
+plt.close()
+print("Saved figures/scaled_loss_curve.png")
