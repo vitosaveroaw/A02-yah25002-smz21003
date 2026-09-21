@@ -57,7 +57,7 @@ plt.figure(figsize=(6, 6))
 plt.scatter(y_train, train_pred, alpha=0.3, s=10)
 plt.plot(
 [y_train.min(), y_train.max()], 
-[y_train.min(), y_train.max()], "r--"
+[y_train.min(), y_train.max()], "r--",
 linewidth=2,
 ) 
 plt.xlabel ("Actual median house value")
@@ -68,4 +68,21 @@ plt.savefig("figures/train_actual_vs_pred.png", dpi=150)
 plt.close()
 
 print("Saved figures/train_actual_vs_pred.png")
+test_pred = mlp_regressor.predict(X_test)
 
+plt.figure(figsize=(6, 6))
+plt.scatter(y_test, test_pred, alpha=0.3, s=10, color="darkorange")
+plt.plot(
+    [y_test.min(), y_test.max()],
+    [y_test.min(), y_test.max()],
+    "r--",
+    linewidth=2,
+)
+plt.xlabel("Actual median house value")
+plt.ylabel("Predicted median house value")
+plt.title("Actual vs. Predicted \u2014 Test")
+plt.tight_layout()
+plt.savefig("figures/test_actual_vs_pred.png", dpi=150)
+plt.close()
+
+print("Saved figures/test_actual_vs_pred.png")
