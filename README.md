@@ -33,13 +33,13 @@ Running the script creates two folders called 'metrics' and 'figures' and prints
 - Confirmation messages after training and after each file is saved
 - Regression metrics (MAE, MSE, RMSE, R²) for training and test sets both for raw features and scaled features
 
-### `figures` folder
+### [figures](figures) folder
 | File | Description |
 | :--- | :--- |
-| `medhouseval_distribution.png` | Distribution of the target variable (`MedHouseVal`) |
-| `train_actual_vs_pred.png` | Actual vs predicted values plot (raw) |
-| `test_actual_vs_pred.png` | Actual vs predicted values plot (raw) |
-| `test_residuals.png` | Test residual plot (raw) |
+| [medhouseval_distribution.png](figures/medhouseval_distribution.png) | Distribution of the target variable (`MedHouseVal`) |
+| [train_actual_vs_pred.png](figures/train_actual_vs_pred.png) | Actual vs predicted values plot (raw) |
+| [test_actual_vs_pred.png](figures/test_actual_vs_pred.png) | Actual vs predicted values plot (raw) |
+| [`test_residuals.png`](figures/test_residuals.png) | Test residual plot (raw) |
 | `loss_curve.png` | Training loss vs iterations (raw) |
 | `scaled_train_actual_vs_pred.png` | Actual vs. predicted values plot (scaled features) |
 | `scaled_test_actual_vs_pred.png` | Actual vs. predicted values plot (scaled features) |
