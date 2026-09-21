@@ -1,7 +1,12 @@
 from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import numpy as np
+import os
+import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 
 # Load California Housing dataset
 housing = fetch_california_housing(as_frame=True)
@@ -40,11 +45,6 @@ mlp_regressor = MLPRegressor(
 # Train the model
 mlp_regressor.fit(X_train, y_train)
 print("MLPRegressor model trained successfully with early stopping.")
-
-
-
-import os
-import matplotlib.pyplot as plt
  
 # Create predictions on the training set
 y_train_pred = mlp_regressor.predict(X_train)
@@ -62,12 +62,15 @@ plt.plot(
 ) 
 plt.xlabel ("Actual median house value")
 plt.ylabel("Predicted median house value")
-plt.title("Actual vs. Predicted \u2014 Train")
+plt.title("Actual vs. Predicted Train Set")
+plt.grid(True)
 plt.tight_layout()
 plt.savefig("figures/train_actual_vs_pred.png", dpi=150)
 plt.close()
 
 print("Saved figures/train_actual_vs_pred.png")
+
+# Create predictions on the test set
 y_test_pred = mlp_regressor.predict(X_test)
 
 plt.figure(figsize=(6, 6))
@@ -80,29 +83,15 @@ plt.plot(
 )
 plt.xlabel("Actual median house value")
 plt.ylabel("Predicted median house value")
-plt.title("Actual vs. Predicted \u2014 Test")
+plt.title("Actual vs. Predicted Test Set")
+plt.grid(True)
 plt.tight_layout()
 plt.savefig("figures/test_actual_vs_pred.png", dpi=150)
 plt.close()
 
 print("Saved figures/test_actual_vs_pred.png")
 
-#Residual plot for the test set
-residuals = y_test - test_pred
-plt.figure(figsize=(6, 6))
-plt.scatter(test_pred, residuals, alpha=0.3, s=10, color="green")
-plt.axhline(y=0, color="r", linestyle="--", linewidth=2)
-plt.xlabel("Predicted median house value")
-plt.ylabel("Residuals(Actual - Predicted)")
-plt.title("Residuals \u2014 Test")
-plt.tight_layout()
-plt.savefig("figures/test_residuals.png", dpi=150)
-plt.close()
-print("Saved figures/test_residuals.png")
-
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-import numpy as np
-
+# Metrics Evaluation
 # --- Evaluate Training Set Performance ---
 print("\n--- Training Set Metrics ---")
 mae_train = mean_absolute_error(y_train, y_train_pred)
@@ -126,3 +115,48 @@ print(f"Mean Absolute Error (MAE): {mae_test:.4f}")
 print(f"Mean Squared Error (MSE): {mse_test:.4f}")
 print(f"Root Mean Squared Error (RMSE): {rmse_test:.4f}")
 print(f"R-squared (R2 Score): {r2_test:.4f}")
+
+# Save metrics to a text file
+# Define the output directory for metrics
+metrics_output_dir = 'metrics'
+os.makedirs(metrics_output_dir, exist_ok=True)
+
+# Prepare the metrics string to be saved
+metrics_content = f"""
+--- Training Set Metrics ---
+Mean Absolute Error (MAE): {mae_train:.4f}
+Mean Squared Error (MSE): {mse_train:.4f}
+Root Mean Squared Error (RMSE): {rmse_train:.4f}
+R-squared (R2 Score): {r2_train:.4f}
+
+--- Test Set Metrics ---
+Mean Absolute Error (MAE): {mae_test:.4f}
+Mean Squared Error (MSE): {mse_test:.4f}
+Root Mean Squared Error (RMSE): {rmse_test:.4f}
+R-squared (R2 Score): {r2_test:.4f}
+"""
+
+# Define the file path
+metrics_file_path = os.path.join(metrics_output_dir, 'regression_metrics.txt')
+
+# Write the metrics to the file
+with open(metrics_file_path, 'w') as f:
+    f.write(metrics_content)
+
+print(f"Regression metrics saved successfully to '{metrics_file_path}'")
+
+# Residuals
+# Residual plot for the test set
+residuals = y_test - y_test_pred
+plt.figure(figsize=(6, 6))
+plt.scatter(y_test_pred, residuals, alpha=0.3, s=10, color="green")
+plt.grid(True)
+plt.axhline(y=0, color="r", linestyle="--", linewidth=2)
+plt.xlabel("Predicted median house value")
+plt.ylabel("Residuals(Actual - Predicted)")
+plt.title("Residuals plot for Test Set")
+plt.grid(True)
+plt.tight_layout()
+plt.savefig("figures/test_residuals.png", dpi=150)
+plt.close()
+print("Saved figures/test_residuals.png")
