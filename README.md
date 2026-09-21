@@ -39,17 +39,17 @@ Running the script creates two folders called 'metrics' and 'figures' and prints
 | [medhouseval_distribution.png](figures/medhouseval_distribution.png) | Distribution of the target variable (`MedHouseVal`) |
 | [train_actual_vs_pred.png](figures/train_actual_vs_pred.png) | Actual vs predicted values plot (raw) |
 | [test_actual_vs_pred.png](figures/test_actual_vs_pred.png) | Actual vs predicted values plot (raw) |
-| [`test_residuals.png`](figures/test_residuals.png) | Test residual plot (raw) |
-| `loss_curve.png` | Training loss vs iterations (raw) |
-| `scaled_train_actual_vs_pred.png` | Actual vs. predicted values plot (scaled features) |
-| `scaled_test_actual_vs_pred.png` | Actual vs. predicted values plot (scaled features) |
-| `scaled_test_residuals.png` | Test residual plot (scaled features) |
-| `scaled_loss_curve.png` | Training loss vs. iterations (scaled features) |
+| [test_residuals.png](figures/test_residuals.png) | Test residual plot (raw) |
+| [loss_curve.png](figures/loss_curve.png) | Training loss vs iterations (raw) |
+| [scaled_train_actual_vs_pred.png](figures/scaled_train_actual_vs_pred.png) | Actual vs. predicted values plot (scaled features) |
+| [scaled_test_actual_vs_pred.png](figures/scaled_test_actual_vs_pred.png) | Actual vs. predicted values plot (scaled features) |
+| [scaled_test_residuals.png](figures/scaled_test_residuals.png) | Test residual plot (scaled features) |
+| [scaled_loss_curve.png](figures/scaled_loss_curve.png) | Training loss vs. iterations (scaled features) |
 
-### `metrics` folder
+### [metrics](metrics) folder
 | File | Description |
 | :--- | :--- |
-| `metrics_performance.txt` | A text file that have both raw and scaled metric performance on training and test set |
+| [metrics_performance.txt](metrics/metrics_performance.txt) | A text file that have both raw and scaled metric performance on training and test set |
 
 ## Collaborators
 - **Vitosavero Wibisono** / yah25002
