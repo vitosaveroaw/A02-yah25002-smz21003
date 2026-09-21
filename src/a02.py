@@ -1,6 +1,7 @@
 from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
 import os
@@ -31,6 +32,21 @@ print(f"X_test shape: {X_test.shape}")
 print(f"y_train shape: {y_train.shape}")
 print(f"y_test shape: {y_test.shape}")
 
+# Make sure the figures folder exists
+os.makedirs('figures', exist_ok=True)
+
+plt.figure(figsize=(10, 6))
+sns.histplot(df['MedHouseVal'], kde=True, bins=50)
+plt.title('Distribution of MedHouseVal')
+plt.xlabel('Median House Value')
+plt.ylabel('Frequency')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('figures/medhouseval_distribution.png')
+plt.close()
+
+print(f"Distribution plot of MedHouseVal saved to 'figures' directory.")
+
 # Initialize MLPRegressor with early stopping and custom hyperparameters
 mlp_regressor = MLPRegressor(
     hidden_layer_sizes=(10, 5), # Custom hyperparameter: two hidden layers with 10 and 5 neurons
@@ -48,9 +64,6 @@ print("MLPRegressor model trained successfully with early stopping.")
  
 # Create predictions on the training set
 y_train_pred = mlp_regressor.predict(X_train)
-
-# Make sure the figures folder exists
-os.makedirs('figures', exist_ok=True)
 
 # Plot actual vs. predicted values for the training set
 plt.figure(figsize=(10 , 6))
@@ -104,9 +117,8 @@ print(f"Root Mean Squared Error (RMSE): {rmse_test:.4f}")
 print(f"R-squared (R2 Score): {r2_test:.4f}")
 
 # Save metrics to a text file
-# Define the output directory for metrics
-metrics_output_dir = 'metrics'
-os.makedirs(metrics_output_dir, exist_ok=True)
+# Make sure the metrics folder exists
+os.makedirs('metrics', exist_ok=True)
 
 # Prepare the metrics string to be saved
 metrics_content = f"""
@@ -124,7 +136,7 @@ R-squared (R2 Score): {r2_test:.4f}
 """
 
 # Define the file path
-metrics_file_path = os.path.join(metrics_output_dir, 'regression_metrics.txt')
+metrics_file_path = 'metrics/regression_metrics.txt'
 
 # Write the metrics to the file
 with open(metrics_file_path, 'w') as f:
@@ -173,3 +185,15 @@ plt.tight_layout()
 plt.savefig("figures/loss_curve.png")
 plt.close()
 print("Saved figures/loss_curve.png")
+
+# Initialize the StandardScaler
+scaler = StandardScaler()
+
+# Fit the scaler on the training data and transform both training and test data
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+print("Features (X_train and X_test) have been scaled using StandardScaler.")
+print(f"X_train_scaled shape: {X_train_scaled.shape}")
+print(f"X_test_scaled shape: {X_test_scaled.shape}")
+
